@@ -26,6 +26,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.gabrielittner.threetenbp:lazythreetenbp:0.2.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'org.threeten:threetenbp:1.3.6:no-tzdb'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
