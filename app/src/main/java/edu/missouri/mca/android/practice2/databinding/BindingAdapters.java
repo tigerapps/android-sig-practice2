@@ -5,7 +5,7 @@ import android.databinding.ObservableList;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.squareup.picasso.Picasso;
+import edu.missouri.mca.android.practice2.Application;
 
 /**
  * Static methods for use by generated code in the Android data binding library.
@@ -44,6 +44,6 @@ public final class BindingAdapters {
 
     @BindingAdapter({"android:src"})
     public static void setSrc(final ImageView view, final String uri) {
-        Picasso.with(view.getContext()).load(uri).into(view);
+        Application.getComponent().getPicasso().load(uri).into(view);
     }
 }

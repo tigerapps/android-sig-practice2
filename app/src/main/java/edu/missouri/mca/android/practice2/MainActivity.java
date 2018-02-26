@@ -12,7 +12,7 @@ import edu.missouri.mca.android.practice2.model.Model;
 public class MainActivity extends Activity {
     private static final String KEY_MODEL_QUERY = "model_query";
 
-    private final Model model = new Model();
+    private final Model model = Application.getComponent().getModel();
     private MainActivityBinding binding;
 
     @Override
