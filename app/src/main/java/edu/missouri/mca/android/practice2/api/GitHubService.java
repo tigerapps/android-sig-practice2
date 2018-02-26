@@ -13,5 +13,13 @@ import retrofit2.http.Query;
 
 public interface GitHubService {
     @GET("/search/repositories")
-    Call<List<Repo>> searchRepositories(@Query("q") String query);
+    Call<SearchResults> searchRepositories(@Query("q") String query);
+
+    class SearchResults {
+        private List<Repo> items;
+
+        public List<Repo> getItems() {
+            return items;
+        }
+    }
 }
