@@ -8,12 +8,13 @@ import android.util.Log;
 
 import org.threeten.bp.Instant;
 
-import java.io.IOException;
-
 import edu.missouri.mca.android.practice2.BR;
 import edu.missouri.mca.android.practice2.api.GitHubService;
 import edu.missouri.mca.android.practice2.api.GitHubService.SearchResults;
 import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -54,20 +55,28 @@ public class Model extends BaseObservable {
         final Instant now = Instant.now();
         if (now.minusMillis(1000).compareTo(lastUpdate) > 0) {
             Log.i("Model", "Performing update");
-            try {
-                final SearchResults results = gitHubService.searchRepositories(query)
-                        .execute()
-                        .body();
-                if (results != null) {
-                    repos.clear();
-                    repos.addAll(results.getItems());
-                }
-            } catch (final IOException e) {
-                Log.i("Model", "API call failed:", e);
-            }
+            final Call<SearchResults> results = gitHubService.searchRepositories(query);
+            results.enqueue(new SearchCallback());
             lastUpdate = now;
         } else {
             Log.i("Model", "Skipping update");
+        }
+    }
+
+    private class SearchCallback implements Callback<SearchResults> {
+        @Override
+        public void onFailure(final Call<SearchResults> call, final Throwable t) {
+            Log.e("Model", "Update failed: ", t);
+        }
+
+        @Override
+        public void onResponse(final Call<SearchResults> call,
+                               final Response<SearchResults> response) {
+            final SearchResults results = response.body();
+            if (results != null) {
+                repos.clear();
+                repos.addAll(results.getItems());
+            }
         }
     }
 }
