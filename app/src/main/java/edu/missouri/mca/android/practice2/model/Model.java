@@ -4,9 +4,11 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
-import org.threeten.bp.Instant;
+import java.util.Objects;
 
 import edu.missouri.mca.android.practice2.BR;
 import edu.missouri.mca.android.practice2.api.GitHubService;
@@ -24,8 +26,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Model extends BaseObservable {
     private final GitHubService gitHubService;
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private final ObservableList<Repo> repos = new ObservableArrayList<>();
-    private Instant lastUpdate = Instant.EPOCH;
+    private final SearchRunner runner = new SearchRunner();
     private String query;
 
     public Model() {
@@ -49,18 +52,13 @@ public class Model extends BaseObservable {
     }
 
     public void setQuery(final String query) {
+        if (Objects.equals(this.query, query))
+            return;
         this.query = query;
         notifyPropertyChanged(BR.query);
         Log.i("Model", "Set query string to '" + query + '\'');
-        final Instant now = Instant.now();
-        if (now.minusMillis(1000).compareTo(lastUpdate) > 0) {
-            Log.i("Model", "Performing update");
-            final Call<SearchResults> results = gitHubService.searchRepositories(query);
-            results.enqueue(new SearchCallback());
-            lastUpdate = now;
-        } else {
-            Log.i("Model", "Skipping update");
-        }
+        handler.removeCallbacks(runner);
+        handler.postDelayed(runner, 500);
     }
 
     private class SearchCallback implements Callback<SearchResults> {
@@ -76,6 +74,19 @@ public class Model extends BaseObservable {
             if (results != null) {
                 repos.clear();
                 repos.addAll(results.getItems());
+            }
+        }
+    }
+
+    private class SearchRunner implements Runnable {
+        @Override
+        public void run() {
+            Log.i("Model", "Performing update");
+            if (query != null && !query.isEmpty()) {
+                final Call<SearchResults> results = gitHubService.searchRepositories(query);
+                results.enqueue(new SearchCallback());
+            } else {
+                repos.clear();
             }
         }
     }
