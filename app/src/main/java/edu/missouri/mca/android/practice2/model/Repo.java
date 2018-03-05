@@ -6,7 +6,7 @@ package edu.missouri.mca.android.practice2.model;
 
 public class Repo {
     private String description;
-    private String htmlUrl;
+    private String html_url;
     private String name;
     private GitHubUser owner;
 
@@ -15,7 +15,7 @@ public class Repo {
     }
 
     public String getHtmlUrl() {
-        return htmlUrl;
+        return html_url;
     }
 
     public String getName() {

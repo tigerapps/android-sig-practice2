@@ -5,16 +5,16 @@ package edu.missouri.mca.android.practice2.model;
  */
 
 public class GitHubUser {
-    private String avatarUrl;
-    private String htmlUrl;
+    private String avatar_url;
+    private String html_url;
     private String login;
 
     public String getAvatarUrl() {
-        return avatarUrl;
+        return avatar_url;
     }
 
     public String getHtmlUrl() {
-        return htmlUrl;
+        return html_url;
     }
 
     public String getLogin() {
