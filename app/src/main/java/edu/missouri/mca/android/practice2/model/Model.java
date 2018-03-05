@@ -28,7 +28,7 @@ public class Model extends BaseObservable {
     private final GitHubService gitHubService;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final ObservableList<Repo> repos = new ObservableArrayList<>();
-    private final SearchRunner runner = new SearchRunner();
+    private final Runnable runner = new SearchRunner();
     private String query;
 
     public Model() {
