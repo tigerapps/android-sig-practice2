@@ -2,7 +2,10 @@ package edu.missouri.mca.android.practice2.databinding;
 
 import android.databinding.BindingAdapter;
 import android.databinding.ObservableList;
+import android.widget.ImageView;
 import android.widget.ListView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * Static methods for use by generated code in the Android data binding library.
@@ -37,5 +40,10 @@ public final class BindingAdapters {
         }
         // Either the list changed, or this is an entirely new listener because the layout changed.
         adapter.setList(newList);
+    }
+
+    @BindingAdapter({"android:src"})
+    public static void setSrc(final ImageView view, final String uri) {
+        Picasso.with(view.getContext()).load(uri).into(view);
     }
 }
