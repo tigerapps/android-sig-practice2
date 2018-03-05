@@ -1,7 +1,9 @@
 package edu.missouri.mca.android.practice2;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 
 import edu.missouri.mca.android.practice2.databinding.MainActivityBinding;
@@ -16,6 +18,11 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity);
         binding.setModel(model);
+        binding.mainRepos.setOnItemClickListener((parent, view, position, id) -> {
+            final String htmlUrl = model.getRepos().get(position).getHtmlUrl();
+            if (htmlUrl != null)
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(htmlUrl)));
+        });
     }
 
     @Override
