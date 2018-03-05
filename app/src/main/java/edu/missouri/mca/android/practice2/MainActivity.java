@@ -10,6 +10,8 @@ import edu.missouri.mca.android.practice2.databinding.MainActivityBinding;
 import edu.missouri.mca.android.practice2.model.Model;
 
 public class MainActivity extends Activity {
+    private static final String KEY_MODEL_QUERY = "model_query";
+
     private final Model model = new Model();
     private MainActivityBinding binding;
 
@@ -23,11 +25,22 @@ public class MainActivity extends Activity {
             if (htmlUrl != null)
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(htmlUrl)));
         });
+        if (savedInstanceState != null) {
+            final String savedQuery = savedInstanceState.getString(KEY_MODEL_QUERY);
+            if (savedQuery != null)
+                model.setQuery(savedQuery);
+        }
     }
 
     @Override
     protected void onDestroy() {
         binding = null;
         super.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        outState.putString(KEY_MODEL_QUERY, model.getQuery());
+        super.onSaveInstanceState(outState);
     }
 }
