@@ -1,5 +1,6 @@
 package edu.missouri.mca.android.practice2.model;
 
+import android.content.SharedPreferences;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableArrayList;
@@ -24,16 +25,22 @@ import retrofit2.Response;
  */
 
 public class Model extends BaseObservable {
+    private static final String KEY_QUERY = "query";
+
     private final GitHubService gitHubService;
     private final Handler handler;
+    private final SharedPreferences preferences;
     private final ObservableList<Repo> repos = new ObservableArrayList<>();
     private final Runnable runner = new SearchRunner();
     private String query;
 
     @Inject
-    public Model(final GitHubService gitHubService, @ApplicationHandler final Handler handler) {
+    public Model(final GitHubService gitHubService, @ApplicationHandler final Handler handler,
+                 final SharedPreferences preferences) {
         this.gitHubService = gitHubService;
         this.handler = handler;
+        this.preferences = preferences;
+        query = preferences.getString(KEY_QUERY, "");
     }
 
     @Bindable
@@ -51,6 +58,7 @@ public class Model extends BaseObservable {
         this.query = query;
         notifyPropertyChanged(BR.query);
         Log.i("Model", "Set query string to '" + query + '\'');
+        preferences.edit().putString(KEY_QUERY, query).apply();
         handler.removeCallbacks(runner);
         handler.postDelayed(runner, 500);
     }

@@ -25,22 +25,11 @@ public class MainActivity extends Activity {
             if (htmlUrl != null)
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(htmlUrl)));
         });
-        if (savedInstanceState != null) {
-            final String savedQuery = savedInstanceState.getString(KEY_MODEL_QUERY);
-            if (savedQuery != null)
-                model.setQuery(savedQuery);
-        }
     }
 
     @Override
     protected void onDestroy() {
         binding = null;
         super.onDestroy();
-    }
-
-    @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        outState.putString(KEY_MODEL_QUERY, model.getQuery());
-        super.onSaveInstanceState(outState);
     }
 }
